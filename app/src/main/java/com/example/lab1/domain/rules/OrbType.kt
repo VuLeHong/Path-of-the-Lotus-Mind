@@ -1,17 +1,27 @@
 package com.example.lab1.domain.rules
 
+import com.example.lab1.R
+
 enum class OrbType(
     val displayName: String,
-    val colorHex: String
 ) {
-    YELLOW("Hoàng Châu", "#FFD700"),
-    GREEN("Lục Châu", "#00C853"),
-    BLUE("Lam Châu", "#2979FF"),
-    PURPLE("Tử Châu", "#AA00FF"),
-    RED("Hồng Châu", "#DD2C00");
+    YELLOW("Yellow Orb"),
+    GREEN("Green Orb"),
+    BLUE("Blue Orb"),
+    PURPLE("Purple Orb"),
+    RED("Red Orb");
     companion object {
         fun fromName(name: String): OrbType? {
             return entries.find { it.name == name }
+        }
+        fun getOrbImage(orb: OrbType): Int {
+            return when (orb) {
+                YELLOW -> R.drawable.yellow_orb
+                GREEN -> R.drawable.green_orb
+                BLUE -> R.drawable.blue_orb
+                PURPLE -> R.drawable.purple_orb
+                RED -> R.drawable.purple_orb
+            }
         }
     }
 }

@@ -1,13 +1,8 @@
 package com.example.lab1.ui.navigation
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.compose.*
 import com.example.lab1.ui.screen.main.MainScreen
 import com.example.lab1.ui.screen.main.MainViewModel
 import com.example.lab1.ui.screen.timer.TimerScreen
@@ -53,18 +48,25 @@ fun AppNavigation() {
             }
         }
 
-        composable(Screen.Main.route) {
-            val vm: MainViewModel = hiltViewModel()
+        composable(Screen.Main.route) { backStackEntry ->
+            val vm: MainViewModel = hiltViewModel(backStackEntry)
+
             MainScreen(
                 vm = vm,
                 onNavigateToSetup = {
                     navController.navigate(Screen.Setup.route)
                 }
-                )
+            )
         }
 
-        composable(Screen.Setup.route) {
-            val vm: MainViewModel = hiltViewModel()
+        composable(Screen.Setup.route) { backStackEntry ->
+
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry(Screen.Main.route)
+            }
+
+            val vm: MainViewModel = hiltViewModel(parentEntry)
+
             TimerScreen(
                 vm = vm,
                 onBack = { navController.popBackStack() }

@@ -6,7 +6,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.runtime.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.example.lab1.R
@@ -27,8 +26,8 @@ fun WelcomeScreen(
     onNavigateToMain: () -> Unit
 ) {
     var name by remember { mutableStateOf("") }
-    val jersey20 = FontFamily(
-        Font(R.font.jersey20, FontWeight.Normal)
+    val fernando = FontFamily(
+        Font(R.font.fernando, FontWeight.Normal)
     )
 
     Box(
@@ -68,6 +67,7 @@ fun WelcomeScreen(
                 textStyle = TextStyle(
                     color = Color(0xFF7A2F3F),
                     fontSize = 22.sp,
+                    fontFamily = fernando,
                     textAlign = TextAlign.Center
                 ),
                 modifier = Modifier

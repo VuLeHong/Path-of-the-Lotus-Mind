@@ -22,6 +22,11 @@ import com.example.lab1.ui.screen.main.MainViewModel
 val jersey20 = FontFamily(
     Font(R.font.jersey20, FontWeight.Normal)
 )
+
+val pixelify = FontFamily(
+    Font(R.font.pixelify, FontWeight.Normal)
+)
+
 @Composable
 fun TimerScreen(
     vm: MainViewModel,
@@ -30,7 +35,53 @@ fun TimerScreen(
     var hour by remember { mutableIntStateOf(0) }
     var minute by remember { mutableIntStateOf(25) }
 
+    // ================= LOGIC =================
+
+    fun increaseMinute() {
+        if (hour == 5 && minute == 59) return
+
+        minute += 1
+
+        if (minute >= 60) {
+            minute = 0
+            hour = (hour + 1).coerceAtMost(5)
+        }
+    }
+
+    fun decreaseMinute() {
+        if (hour == 0 && minute <= 1) {
+            minute = 1
+            return
+        }
+
+        minute -= 1
+
+        if (minute < 0) {
+            if (hour > 0) {
+                hour -= 1
+                minute = 59
+            } else {
+                minute = 1
+            }
+        }
+    }
+
+    fun increaseHour() {
+        if (hour < 5) hour += 1
+    }
+
+    fun decreaseHour() {
+        if (hour > 0) {
+            hour -= 1
+            if (hour == 0 && minute == 0) {
+                minute = 1
+            }
+        }
+    }
+
     val totalMinutes = hour * 60 + minute
+
+    // ================= UI =================
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -38,7 +89,6 @@ fun TimerScreen(
 
         Background()
 
-        // ===== FRAME =====
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -46,7 +96,6 @@ fun TimerScreen(
                 .align(Alignment.Center)
         ) {
 
-            // BACKGROUND FRAME
             Image(
                 painter = painterResource(R.drawable.background2),
                 contentDescription = null,
@@ -54,18 +103,16 @@ fun TimerScreen(
                 contentScale = ContentScale.FillBounds
             )
 
-            // ===== CLOSE BUTTON =====
             Image(
                 painter = painterResource(R.drawable.exit_btn),
                 contentDescription = null,
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .padding(end = 24.dp, top = 112.dp )
+                    .padding(end = 24.dp, top = 112.dp)
                     .size(42.dp)
                     .clickable { onBack() }
             )
 
-            // ===== TITLE =====
             Text(
                 text = "Cultivate",
                 fontSize = 56.sp,
@@ -76,19 +123,17 @@ fun TimerScreen(
                     .padding(start = 24.dp, top = 120.dp)
             )
 
-            // ===== TIME PICKER =====
             Row(
                 modifier = Modifier
                     .align(Alignment.Center)
                     .padding(horizontal = 16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+                verticalAlignment = Alignment.CenterVertically
             ) {
 
                 TimeColumn(
                     value = hour,
-                    onIncrease = { hour = (hour + 1).coerceAtMost(5) },
-                    onDecrease = { hour = (hour - 1).coerceAtLeast(0) }
+                    onIncrease = { increaseHour() },
+                    onDecrease = { decreaseHour() }
                 )
 
                 Spacer(Modifier.width(12.dp))
@@ -103,12 +148,11 @@ fun TimerScreen(
 
                 TimeColumn(
                     value = minute,
-                    onIncrease = { minute = (minute + 1).coerceAtMost(55) },
-                    onDecrease = { minute = (minute - 1).coerceAtLeast(0) }
+                    onIncrease = { increaseMinute() },
+                    onDecrease = { decreaseMinute() }
                 )
             }
 
-            // ===== START BUTTON =====
             Image(
                 painter = painterResource(R.drawable.start_timer),
                 contentDescription = null,
@@ -137,7 +181,6 @@ fun TimeColumn(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        // ===== UP =====
         Image(
             painter = painterResource(R.drawable.up_arrow),
             contentDescription = null,
@@ -148,7 +191,6 @@ fun TimeColumn(
 
         Spacer(Modifier.height(8.dp))
 
-        // ===== BOX =====
         Box(
             modifier = Modifier
                 .height(100.dp)
@@ -174,7 +216,6 @@ fun TimeColumn(
 
         Spacer(Modifier.height(8.dp))
 
-        // ===== DOWN =====
         Image(
             painter = painterResource(R.drawable.down_arrow),
             contentDescription = null,

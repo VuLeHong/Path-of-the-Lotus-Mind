@@ -25,7 +25,7 @@ object PenaltyEngine {
                 PenaltyResult(
                     newExp = newExp,
                     newRealmOrdinal = currentRealm.ordinal,
-                    description = "Thất bại — mất $loss XP"
+                    description = "You Lost $loss XP"
                 )
             }
 
@@ -56,7 +56,7 @@ object PenaltyEngine {
                 PenaltyResult(
                     newExp = newExp,
                     newRealmOrdinal = newRealm.ordinal,
-                    description = "Thất bại — mất $loss XP"
+                    description = "You Lost $loss XP"
                 )
             }
 
@@ -87,7 +87,7 @@ object PenaltyEngine {
                 PenaltyResult(
                     newExp = newExp,
                     newRealmOrdinal = newRealm.ordinal,
-                    description = "Thất bại — mất $loss XP"
+                    description = "You Lost $loss XP"
                 )
             }
 
@@ -116,7 +116,7 @@ object PenaltyEngine {
                 PenaltyResult(
                     newExp = newExp,
                     newRealmOrdinal = newRealm.ordinal,
-                    description = "Thất bại — mất $loss XP"
+                    description = "You Lost $loss XP"
                 )
             }
 
@@ -145,7 +145,7 @@ object PenaltyEngine {
                 PenaltyResult(
                     newExp = newExp,
                     newRealmOrdinal = newRealm.ordinal,
-                    description = "Thất bại — mất $loss XP"
+                    description = "You Lost $loss XP"
                 )
             }
         }

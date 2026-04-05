@@ -35,7 +35,7 @@ class CompleteSessionUseCase @Inject constructor(
 
             val updatedExp = character.exp + sessionXp
 
-            if (elapsedSeconds >= 900) {
+            if (elapsedSeconds >= 60) {
 
                 val orbCount = (2..5).random()
                 val orbs = mutableListOf<OrbType>()

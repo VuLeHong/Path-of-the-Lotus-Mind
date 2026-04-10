@@ -41,13 +41,22 @@ fun WelcomeScreen(
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )
+        // ===== TITLE =====
+        Image(
+            painter = painterResource(R.drawable.title),
+            contentDescription = null,
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(top = 100.dp)
+                .width(300.dp)
+        )
 
         // ===== NAME BOX =====
         Box(
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .padding(top = 300.dp)
-                .fillMaxWidth(0.95f),
+                .fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
             Image(

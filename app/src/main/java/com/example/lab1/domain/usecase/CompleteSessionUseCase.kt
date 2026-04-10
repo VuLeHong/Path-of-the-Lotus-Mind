@@ -26,7 +26,7 @@ class CompleteSessionUseCase @Inject constructor(
         val character = characterRepo.getCharacter()!!
         val currentRealm = RealmConfig.fromOrdinal(character.realmOrdinal)
 
-        val sessionXp = (elapsedSeconds / 60).toInt()
+        val sessionXp = (elapsedSeconds / 60)*3000.toInt()
 
         var droppedOrbs: List<OrbType> = emptyList()
         var penaltyDesc: String? = null
@@ -37,7 +37,7 @@ class CompleteSessionUseCase @Inject constructor(
 
             if (elapsedSeconds >= 60) {
 
-                val orbCount = (2..5).random()
+                val orbCount = (5..6).random()
                 val orbs = mutableListOf<OrbType>()
 
                 repeat(orbCount) {
@@ -69,16 +69,15 @@ class CompleteSessionUseCase @Inject constructor(
             result.newExp to result.newRealmOrdinal
         }
 
-        val expGained = (newExp - character.exp)
+        val expChange = (newExp - character.exp)
             .toInt()
-            .coerceAtLeast(0)
 
         sessionRepo.saveSession(
             startTime = startTime,
             endTime = System.currentTimeMillis(),
             durationSeconds = elapsedSeconds,
             targetSeconds = targetSeconds,
-            expGained = expGained,
+            expChange = expChange,
             isSuccess = isSuccess,
             realmAtStart = character.realmOrdinal
         )
@@ -91,7 +90,7 @@ class CompleteSessionUseCase @Inject constructor(
         val leveledUp = false
 
         return SessionResult(
-            expGained = expGained,
+            expChange = expChange,
             newExp = newExp,
             newRealmOrdinal = newRealmOrdinal,
             leveledUp = leveledUp,

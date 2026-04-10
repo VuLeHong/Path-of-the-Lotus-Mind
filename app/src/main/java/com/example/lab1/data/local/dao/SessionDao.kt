@@ -26,7 +26,7 @@ interface SessionDao {
     suspend fun getFocusDays(): List<String>
 
     @Query("""    
-    SELECT SUM(expGained)
+    SELECT SUM(expChange)
     FROM session
     WHERE isSuccess = 1
     AND date(startTime / 1000, 'unixepoch') = date('now', '-1 day')
@@ -34,7 +34,7 @@ interface SessionDao {
     suspend fun getYesterdayXp(): Int?
 
     @Query("""
-    SELECT SUM(expGained)
+    SELECT SUM(expChange)
     FROM session
     WHERE isSuccess = 1
     AND date(startTime / 1000, 'unixepoch')

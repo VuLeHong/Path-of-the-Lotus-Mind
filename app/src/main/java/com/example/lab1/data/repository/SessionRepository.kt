@@ -19,7 +19,7 @@ class SessionRepository @Inject constructor(
         endTime: Long,
         durationSeconds: Long,
         targetSeconds: Long,
-        expGained: Int,
+        expChange: Int,
         isSuccess: Boolean,
         realmAtStart: Int
     ) {
@@ -29,7 +29,7 @@ class SessionRepository @Inject constructor(
                 endTime = endTime,
                 durationSeconds = durationSeconds,
                 targetSeconds = targetSeconds,
-                expGained = expGained,
+                expChange = expChange,
                 isSuccess = isSuccess,
                 realmAtStart = realmAtStart
             )

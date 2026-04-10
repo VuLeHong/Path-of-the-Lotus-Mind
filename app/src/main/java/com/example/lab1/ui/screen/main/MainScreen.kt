@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -24,13 +25,17 @@ import com.example.lab1.domain.rules.RealmConfig
 import com.example.lab1.ui.screen.timer.jersey20
 import com.example.lab1.ui.screen.timer.pixelify
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.Locale
 
 
 @Composable
 fun MainScreen(
     vm: MainViewModel,
-    onNavigateToSetup: () -> Unit
+    onNavigateToSetup: () -> Unit,
+    onNavigateToInventory: () -> Unit,
+    onNavigateToHistory: () -> Unit,
+    onNavigateToRealmBreak: () -> Unit
 ) {
     val character by vm.character.collectAsState(initial = null)
     val expUi by vm.expUi.collectAsState()
@@ -43,7 +48,6 @@ fun MainScreen(
 
     val realm = RealmConfig.fromOrdinal(character!!.realmOrdinal)
     val isMeditating = character!!.isMeditating
-
     Box(modifier = Modifier.fillMaxSize()) {
 
         Background()
@@ -57,13 +61,17 @@ fun MainScreen(
         )
 
         TopActions(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            onNavigateToInventory,
+            onNavigateToHistory,
+            onNavigateToRealmBreak
         )
         if (isMeditating) {
             KeepScreenOn()
         }
         CharacterStage(
-            modifier = Modifier.align(Alignment.Center),
+            modifier = Modifier.align(Alignment.Center).padding(bottom = 40.dp),
+            auraCircle = realm.auraCircle,
             isMeditating = isMeditating,
             duration = duration,
             startTime = startTime,
@@ -148,7 +156,7 @@ fun ExpBar(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(realmName, fontSize = 24.sp, fontFamily = pixelify, color = Color(0xFFFFD700))
-            Text("$current / $required", fontSize = 12.sp, color = Color.White)
+            Text("$current / $required", fontSize = 12.sp, fontFamily = jersey20, color = Color.White)
         }
 
         Spacer(Modifier.height(6.dp))
@@ -171,7 +179,10 @@ fun ExpBar(
 
 @Composable
 fun TopActions(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onNavigateToInventory: () -> Unit,
+    onNavigateToHistory: () -> Unit,
+    onNavigateToRealmBreak: () -> Unit
 ) {
     Box(modifier = modifier) {
 
@@ -184,13 +195,13 @@ fun TopActions(
             Image(
                 painter = painterResource(R.drawable.history_btn),
                 contentDescription = null,
-                modifier = Modifier.size(70.dp)
+                modifier = Modifier.size(70.dp).clickable { onNavigateToHistory() }
             )
 
             Image(
                 painter = painterResource(R.drawable.inventory_btn),
                 contentDescription = null,
-                modifier = Modifier.size(70.dp)
+                modifier = Modifier.size(70.dp).clickable { onNavigateToInventory() },
             )
         }
 
@@ -201,6 +212,7 @@ fun TopActions(
                 .align(Alignment.TopEnd)
                 .padding(top = 140.dp, end = 24.dp)
                 .size(70.dp)
+                .clickable{ onNavigateToRealmBreak() }
         )
     }
 }
@@ -208,6 +220,7 @@ fun TopActions(
 @Composable
 fun CharacterStage(
     modifier: Modifier = Modifier,
+    auraCircle: Int,
     isMeditating: Boolean,
     duration: Long,
     startTime: Long,
@@ -215,22 +228,32 @@ fun CharacterStage(
 ) {
 
     Box(
-        modifier = modifier.size(350.dp),
+        modifier = modifier.size(300.dp),
         contentAlignment = Alignment.BottomCenter
     ) {
+        if (auraCircle != 0) {
+            Image(
+                painter = painterResource(auraCircle),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(300.dp)
+                    .alpha(0.9f)
+                    .padding(bottom = 60.dp)
+            )
+        }
 
         Image(
             painter = painterResource(
                 id = if (isMeditating) R.drawable.sit else R.drawable.stand
             ),
             contentDescription = null,
-            modifier = Modifier.height(220.dp)
+            modifier = Modifier.height(250.dp)
         )
 
         Timer(
             modifier = Modifier
                 .align(Alignment.TopCenter)
-                .offset(y = (-20).dp),
+                .offset(y = (-60).dp),
             isRunning = isMeditating,
             totalSeconds = duration.toInt(),
             startTime = startTime,
@@ -300,6 +323,9 @@ fun CultivateButton(
     isMeditating: Boolean,
     onClick: () -> Unit
 ) {
+    var isClicking by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+
     Image(
         painter = painterResource(
             id = if (isMeditating) R.drawable.stop else R.drawable.start
@@ -307,7 +333,17 @@ fun CultivateButton(
         contentDescription = null,
         modifier = modifier
             .padding(bottom = 80.dp)
-            .clickable { onClick() }
+            .clickable {
+                if (isClicking) return@clickable
+
+                isClicking = true
+                onClick()
+
+                scope.launch {
+                    delay(300)
+                    isClicking = false
+                }
+            }
     )
 }
 

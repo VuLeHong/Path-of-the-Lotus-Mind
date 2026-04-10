@@ -11,7 +11,7 @@ data class SessionEntity(
     val endTime: Long,
     val durationSeconds: Long,
     val targetSeconds: Long,
-    val expGained: Int,
+    val expChange: Int,
     val isSuccess: Boolean,
     val realmAtStart: Int
 )
